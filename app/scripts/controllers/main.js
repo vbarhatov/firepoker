@@ -223,15 +223,20 @@ angular.module('firePokerApp')
     };
 
     // Get estimate results average
-    // https://stackoverflow.com/a/20762713/1346039
     $scope.getResultsAverage = function() {
-      var arr = [];
+      var sum = 0;
+      var cnt = 0;
       angular.forEach($scope.game.estimate.results, function(result) {
-        arr.push(result.points);
+        if (!isNaN(result.points)) {
+          sum += result.points;
+          cnt += 1;
+        }
       });
-      return arr.sort(function(a,b) {
-        return arr.filter(function(v) { return v===a; }).length - arr.filter(function(v) { return v===b; }).length;
-      }).pop();
+      if (cnt > 0) {
+        var average = sum / cnt;
+        return average >= 0.25 && average < 0.75 ? 0.5 : Math.round(average);
+      }
+      return '?';
     };
 
     // Get total of active participants
@@ -289,8 +294,8 @@ angular.module('firePokerApp')
 
     // Card deck options
     $scope.decks = [
-      [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
-      [0, '½', 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'],
+      [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
+      [0, 0.5, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'],
       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, '?'],
       [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, '?']
     ];

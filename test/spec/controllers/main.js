@@ -51,8 +51,8 @@ describe('Controller: MainCtrl', function () {
 
   // Current valid/available card decks
   var VALID_CARD_DECKS = [
-    [0, '½', 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
-    [0, '½', 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'],
+    [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
+    [0, 0.5, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'],
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, '?'],
     [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, '?']
   ];
@@ -61,7 +61,7 @@ describe('Controller: MainCtrl', function () {
   var FIREBASE_URL = 'https://pzfqrq7kjy.firebaseio.com';
 
   // Set a test game for tests
-  var setTestGame = function() {
+  var setTestGame = function(estimatePoints = [8, 8, 16]) {
     scope.game = {
       "created" : 1382370198911,
       "participants" : {
@@ -89,21 +89,21 @@ describe('Controller: MainCtrl', function () {
       "estimate" : {
         "results" : [
           {
-            "points" : 8,
+            "points" : estimatePoints [0],
             "user" : {
               "fullname" : "Firefox",
               "id" : "eb5c1da2-2cdd-b89f-9369-ea532d1a9b27"
             }
           },
           {
-            "points" : 8,
+            "points" : estimatePoints [1],
             "user" : {
               "fullname" : "Safari",
               "id" : "37b9be39-2598-6e05-0295-33490ef60ad7"
             }
           },
           {
-            "points" : 16,
+            "points" : estimatePoints [2],
             "user" : {
               "fullname" : "Chrome",
               "id" : "558aa568-461f-9bf5-fdc8-c4e5aab51b92"
@@ -332,7 +332,17 @@ describe('Controller: MainCtrl', function () {
 
   it('should calculate the results average points', function() {
     setTestGame();
-    expect(scope.getResultsAverage()).toBe(8);
+    expect(scope.getResultsAverage()).toBe(11);
+  });
+
+  it('should calculate the results average points with 0.5 value', function() {
+    setTestGame([0.5, 0.9, '?']);
+    expect(scope.getResultsAverage()).toBe(0.5);
+  });
+
+  it('should calculate the result when average is not available', function() {
+    setTestGame(['a', 'b', 'c']);
+    expect(scope.getResultsAverage()).toBe('?');
   });
 
   it('should give the total number of active participants in the game', function() {
