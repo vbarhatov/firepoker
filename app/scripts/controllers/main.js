@@ -113,12 +113,47 @@ angular.module('firePokerApp')
       }
     };
 
+    $scope.parseStories = function(storyListAsString) {
+      var lines = storyListAsString.trim().split('\n');
+      if (lines < 2) {
+        return lines;
+      }
+      var jiraCodeRegexp = /[A-Z]+-[0-9]+/g;
+      if (lines[0].match(jiraCodeRegexp) && !lines[1].match(jiraCodeRegexp)) {
+        // Parse as a list of JIRA tickets. Expected format:
+        // ABC-001
+        // Ticket number 1
+        // bla bla bla
+        // bla bla bla
+        //
+        // ABC-002
+        // Ticket number 2
+
+        var storyCode = '';
+        var storyTitle = '';
+        var stories = [];
+        for (var i in lines) {
+          if (storyCode === '') {
+            storyCode = lines[i];
+          } else if (storyTitle === '') {
+            storyTitle = lines[i];
+            stories.push(storyCode + ' ' + storyTitle);
+          } else if (lines[i] === '') {
+            storyCode = storyTitle = '';
+          }
+        }
+        return stories;
+      } else {
+        return lines;
+      }
+    };
+
     // Create game
     $scope.createGame = function() {
       var stories = [],
           newGame = angular.copy($scope.newGame);
       if (newGame.stories) {
-        angular.forEach(newGame.stories.split('\n'), function(title) {
+        angular.forEach($scope.parseStories(newGame.stories), function(title) {
           var story = {
             title: title,
             status: 'queue'
