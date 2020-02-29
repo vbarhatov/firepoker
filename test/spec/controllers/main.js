@@ -54,7 +54,8 @@ describe('Controller: MainCtrl', function () {
     [0, 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100, '?'],
     [0, 0.5, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, '?'],
     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, '?'],
-    [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, '?']
+    [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, '?'],
+    [0, 0.5, 1, 2, 3, 4, 5, 8, 13, 21, 34, 55, 89, '?']
   ];
 
   // Firebase URL
@@ -388,7 +389,7 @@ describe('Controller: MainCtrl', function () {
   });
 
   it('should set a default `newGame` value', function() {
-    expect(scope.newGame).toEqual({deck: 0});
+    expect(scope.newGame).toEqual({deck: 4});
   });
 
   it('should set a default `showCardDeck` value', function() {
